@@ -1,0 +1,150 @@
+/* RuneScape-inspired styling */
+:root {
+    --rs-brown: #463423;
+    --rs-gold: #ff981f;
+    --rs-black: #000000;
+    --rs-chat-bg: rgba(0, 0, 0, 0.8);
+}
+
+body {
+    background-color: #0f0f0f;
+    color: white;
+    font-family: 'RuneScape UF', 'RuneScape', Arial, sans-serif;
+}
+
+.runescape-window {
+    width: 600px;
+    background: linear-gradient(to bottom, #463423, #2b1f15);
+    border: 2px solid var(--rs-gold);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.chat-box {
+    background-color: var(--rs-chat-bg);
+    border: 1px solid var(--rs-gold);
+    padding: 10px;
+    margin-bottom: 15px;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.status-message {
+    color: var(--rs-gold);
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.timer {
+    color: #00ff00;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.log-messages {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.control-panel {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.rs-button {
+    background: linear-gradient(to bottom, #5a442d, #463423);
+    border: 2px solid var(--rs-gold);
+    border-radius: 3px;
+    padding: 8px 20px;
+    color: var(--rs-gold);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    text-align: center;
+}
+
+.rs-button:hover {
+    background: linear-gradient(to bottom, #6a542d, #564533);
+    transform: scale(1.05);
+}
+
+.rs-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.start-btn {
+    border-color: #00ff00;
+    color: #00ff00;
+}
+
+.stop-btn {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+.client-selector-btn {
+    border-color: #00ffff;
+    color: #00ffff;
+}
+
+.stats-panel {
+    background-color: var(--rs-chat-bg);
+    border: 1px solid var(--rs-gold);
+    padding: 10px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.stat-label {
+    color: var(--rs-gold);
+}
+
+.stat-value {
+    color: white;
+}
+
+/* Message types */
+.message-normal {
+    color: white;
+}
+
+.message-success {
+    color: #00ff00;
+}
+
+.message-warning {
+    color: #ffff00;
+}
+
+.message-error {
+    color: #ff0000;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--rs-brown);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--rs-gold);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ffa93f;
+}
