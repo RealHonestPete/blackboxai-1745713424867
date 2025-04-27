@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Window Selector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #fff;
+            font-family: 'RuneScape UF', 'RuneScape', Arial, sans-serif;
+            padding: 20px;
+        }
+        .window-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ff981f;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .window-item {
+            padding: 8px;
+            border-bottom: 1px solid #463423;
+            cursor: pointer;
+        }
+        .window-item:hover {
+            background-color: #463423;
+        }
+        .window-item.selected {
+            background-color: #ff981f;
+            color: #000;
+        }
+        button {
+            background-color: #ff981f;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #463423;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-2xl mb-4">Select Game Window</h1>
+    <div class="window-list" id="windowList"></div>
+    <button id="selectBtn" disabled>Select Window</button>
+
+    <script>
+        const { ipcRenderer } = window.require ? window.require('electron') : require('electron');
+        const windowList = document.getElementById('windowList');
+        const selectBtn = document.getElementById('selectBtn');
+        let selectedWindowId = null;
+
+        async function loadWindows() {
+            const windows = await ipcRenderer.invoke('list-windows');
+            windowList.innerHTML = '';
+            windows.forEach(win => {
+                const div = document.createElement('div');
+                div.className = 'window-item';
+                div.textContent = `${win.title} [${win.bounds.width}x${win.bounds.height}]`;
+                div.dataset.id = win.id;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.window-item').forEach(item => item.classList.remove('selected'));
+                    div.classList.add('selected');
+                    selectedWindowId = win.id;
+                    selectBtn.disabled = false;
+                });
+                windowList.appendChild(div);
+            });
+        }
+
+        selectBtn.addEventListener('click', async () => {
+            if (selectedWindowId !== null) {
+                const success = await ipcRenderer.invoke('select-game-client', selectedWindowId);
+                if (success) {
+                    alert('Game client window selected successfully.');
+                    window.close();
+                } else {
+                    alert('Failed to select window.');
+                }
+            }
+        });
+
+        loadWindows();
+    </script>
+</body>
+</html>
