@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2004Scape Bot Client Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .log-info { background-color: #1a1a1a; color: #fff; }
+        .log-success { background-color: #064e3b; color: #fff; }
+        .log-error { background-color: #7f1d1d; color: #fff; }
+        .log-warning { background-color: #854d0e; color: #fff; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">2004Scape Bot Client Test</h1>
+        
+        <div class="bg-gray-800 p-4 rounded-lg mb-4">
+            <h2 class="text-xl mb-2">Test Controls</h2>
+            <button id="startTest" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">
+                Start Test
+            </button>
+            <button id="stopTest" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded ml-2" disabled>
+                Stop Test
+            </button>
+        </div>
+
+        <div class="bg-gray-800 p-4 rounded-lg">
+            <h2 class="text-xl mb-2">Test Log</h2>
+            <div id="logOutput" class="font-mono text-sm h-96 overflow-y-auto bg-gray-900 p-4 rounded">
+                <!-- Log entries will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import browser-compiled modules
+        import { GameClientDetector } from '../core/client-detector.js';
+        import { PixelDetector } from '../core/pixel-detector.js';
+        import { RunescapeBot } from '../core/bot.js';
+        import { GameInteraction } from '../core/game-interaction.js';
+
+        const logOutput = document.getElementById('logOutput');
+        const startButton = document.getElementById('startTest');
+        const stopButton = document.getElementById('stopTest');
+
+        let bot = null;
+        let isTestRunning = false;
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logOutput.appendChild(entry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        async function runTest() {
+            try {
+                isTestRunning = true;
+                updateButtons();
+
+                log('Starting client detection test...', 'info');
+                
+                // Initialize detectors
+                const clientDetector = new GameClientDetector();
+                const pixelDetector = new PixelDetector();
+                const gameInteraction = new GameInteraction();
+                
+                log('Waiting for 2004Scape client...', 'info');
+                const gameWindow = await clientDetector.waitForClient(30000);
+                
+                if (gameWindow) {
+                    log('Game client detected!', 'success');
+                    log(`Window details: ${JSON.stringify(gameWindow, null, 2)}`, 'info');
+                    
+                    // Test pixel detection
+                    log('Testing pixel detection...', 'info');
+                    const elements = await pixelDetector.findGameElements();
+                    
+                    for (const [elementType, matches] of Object.entries(elements)) {
+                        if (matches.length > 0) {
+                            log(`Found ${elementType}: ${matches.length} matches`, 'success');
+                            log(`Best match: x=${matches[0].x}, y=${matches[0].y}, confidence=${matches[0].confidence}`, 'info');
+                        }
+                    }
+                    
+                    // Initialize bot
+                    log('Initializing bot...', 'info');
+                    bot = new RunescapeBot();
+                    
+                    // Set up event handling
+                    bot.setEventCallback((eventName, data) => {
+                        log(`Bot Event: ${eventName} - ${JSON.stringify(data)}`, 'info');
+                    });
+                    
+                    // Test bot initialization
+                    await bot.start();
+                    
+                    log('Test completed successfully!', 'success');
+                } else {
+                    log('Failed to detect game client within timeout period', 'error');
+                }
+            } catch (error) {
+                log(`Test failed: ${error.message}`, 'error');
+                console.error('Test error:', error);
+            } finally {
+                isTestRunning = false;
+                updateButtons();
+            }
+        }
+
+        function stopTest() {
+            if (bot) {
+                bot.stop();
+                bot = null;
+            }
+            isTestRunning = false;
+            updateButtons();
+            log('Test stopped', 'warning');
+        }
+
+        function updateButtons() {
+            startButton.disabled = isTestRunning;
+            stopButton.disabled = !isTestRunning;
+        }
+
+        startButton.addEventListener('click', runTest);
+        stopButton.addEventListener('click', stopTest);
+
+        // Initial setup
+        log('Test page loaded. Click "Start Test" to begin.', 'info');
+        updateButtons();
+    </script>
+</body>
+</html>
