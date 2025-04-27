@@ -1,0 +1,29 @@
+{
+  "name": "runescape-bot",
+  "version": "1.0.0",
+  "description": "A bot for RuneScape that completes Tutorial Island and trains on chickens",
+  "main": "main.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "build:browser": "node build-browser.js",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "ui": "npm run build:browser && ts-node src/server.ts",
+    "test-client": "ts-node src/test-client.ts",
+    "desktop": "electron ."
+  },
+  "dependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "ts-node-dev": "^2.0.0",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "electron": "^26.0.0",
+    "node-window-manager": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/express": "^4.17.21"
+  }
+}
