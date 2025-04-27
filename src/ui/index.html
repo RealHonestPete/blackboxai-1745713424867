@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuneScape Bot Controller</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="runescape-window">
+        <div class="window-header">
+            <img src="https://www.runescape.com/img/rsp777/favicon.png" alt="RS Icon" class="rs-icon">
+            <span class="header-text">Bot Controller</span>
+        </div>
+        <div class="window-content">
+            <div class="chat-box">
+                <div id="botStatus" class="status-message">Bot is currently stopped</div>
+                <div id="timer" class="timer">Time Running: 00:00:00</div>
+                <div class="log-messages" id="logMessages">
+                    <!-- Log messages will appear here -->
+                </div>
+            </div>
+            <div class="control-panel flex space-x-4">
+                <button id="startBtn" class="rs-button start-btn">
+                    <span class="btn-text">Start Bot</span>
+                </button>
+                <button id="clientSelectorBtn" class="rs-button client-selector-btn">
+                    <span class="btn-text">Select Game Window</span>
+                </button>
+                <button id="stopBtn" class="rs-button stop-btn" disabled>
+                    <span class="btn-text">Stop Bot</span>
+                </button>
+            </div>
+
+            <div id="clientSelectorContainer" class="hidden mt-4 p-4 border border-yellow-500 rounded bg-black text-yellow-400 font-mono">
+                <div id="selectionInstructions">Click and drag to select the 2004Scape game window.</div>
+                <div id="selectionInfo" class="mt-2">No area selected</div>
+                <div id="highlightOverlay" class="highlight-overlay hidden"></div>
+                <div class="mt-2">
+                    <button id="confirmSelection" class="rs-button client-selector-btn" disabled>Confirm Selection</button>
+                    <button id="cancelSelection" class="rs-button stop-btn" disabled>Cancel</button>
+                </div>
+            </div>
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">Chickens Killed:</span>
+                    <span id="chickensKilled" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Feathers Collected:</span>
+                    <span id="feathersCollected" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Current Location:</span>
+                    <span id="currentLocation" class="stat-value">Not Started</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="ui.js"></script>
+</body>
+</html>
